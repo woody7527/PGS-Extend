@@ -20,6 +20,8 @@ namespace WindowsFormsApplication1
             loadData();
         }
 
+        #region Variables
+
         int shipLenght;
         int freeBoard;
         int containHeight;
@@ -32,69 +34,9 @@ namespace WindowsFormsApplication1
         List<Ship> test = new List<Ship>();
         string FilePath = Application.StartupPath;
 
+        #endregion
+        #region XML classes
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            takeInputs();
-            windageArea = shipLenght * (freeBoard+containHeight);
-            forcePer1000 = (Math.Pow(windSpeedCalc(windBearing-99,windSpeed), 2)) / 18;
-            bollardPull = (forcePer1000 / 1000) * windageArea;
-            bollardPull = Math.Round(bollardPull,1);
-            if (windBearing >= 009 && windBearing <= 189)
-            {
-                bollardPull = 0;
-            }
-            sendOutputs();
-
-            Console.WriteLine("Ship Lenght: " + shipLenght + "Metres");
-            Console.WriteLine("Freeboard Height: " + freeBoard + "Metres");
-            Console.WriteLine("Wind Speed: " + windSpeed + "Knots");
-            Console.WriteLine("Windage Area: " + windageArea + "Metres Squarded");
-            Console.WriteLine("Force Per 1000m^2: " + forcePer1000 + "Newtons");
-            Console.WriteLine("Bollard Pull: " + bollardPull + "Newtons");
-            Console.WriteLine("Number of Tugs: " + numberOfTugs);
-        }
-        void takeInputs()
-        {
-            shipLenght = Int32.Parse(tBoxShipLength.Text);
-            freeBoard = Int32.Parse(tBoxFreebroad.Text);
-            containHeight = Int32.Parse(tBoxContainerHeight.Text);
-            windSpeed = Int32.Parse(textBox3.Text);
-            windBearing = Int32.Parse(tBoxWindBearing.Text);
-            numberOfTugs = Int32.Parse(tBoxNumberOfTugs.Text);
-        }
-        void sendOutputs()
-        {
-            label1.Text = "Windage Area: "+windageArea.ToString();
-            label2.Text = "Total Bollard Pull: "+bollardPull.ToString();
-            label3.Text = "Bollard Pull per Tug: "+(Math.Round((bollardPull/numberOfTugs),1)).ToString();
-        }
-
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        static public void SerializeToXML(List<Ship> ship)
-        {
-            string FilePath = Application.StartupPath;
-            XmlSerializer Serializer = new XmlSerializer(typeof(List<Ship>));
-            TextWriter textWriter = new StreamWriter( FilePath+"\\Ship.xml");
-            Serializer.Serialize(textWriter, ship);
-            textWriter.Close();
-            Console.WriteLine("Serialization Complete");
-        }
-        static List<Ship> DeserializeFromXml()
-        {
-            string FilePath = Application.StartupPath;
-            XmlSerializer deserializer = new XmlSerializer(typeof(List<Ship>));
-            TextReader textReader = new StreamReader(FilePath+"\\Ship.xml");
-            List<Ship> ships;
-            ships = (List<Ship>)deserializer.Deserialize(textReader);
-            textReader.Close();
-
-            return ships;
-        }
         public class Ship
         {
             [XmlElement("ShipName")]
@@ -105,6 +47,38 @@ namespace WindowsFormsApplication1
             { get; set; }
         }
 
+        #endregion
+        #region Form Interaction
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            takeInputs();
+            windageArea = shipLenght * (freeBoard + containHeight);
+            forcePer1000 = (Math.Pow(windSpeedCalc(windBearing - 99, windSpeed), 2)) / 18;
+            bollardPull = (forcePer1000 / 1000) * windageArea;
+            bollardPull = Math.Round(bollardPull, 1);
+
+            if (windBearing >= 009 && windBearing <= 189)
+            {
+                bollardPull = 0;
+            }
+
+            sendOutputs();
+
+            Console.WriteLine("Ship Lenght: " + shipLenght + "Metres");
+            Console.WriteLine("Freeboard Height: " + freeBoard + "Metres");
+            Console.WriteLine("Wind Speed: " + windSpeed + "Knots");
+            Console.WriteLine("Windage Area: " + windageArea + "Metres Squarded");
+            Console.WriteLine("Force Per 1000m^2: " + forcePer1000 + "Newtons");
+            Console.WriteLine("Bollard Pull: " + bollardPull + "Newtons");
+            Console.WriteLine("Number of Tugs: " + numberOfTugs);
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+        
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Form aboutForm = new aboutForm();
@@ -122,48 +96,44 @@ namespace WindowsFormsApplication1
             Console.WriteLine(thing);
             updateData();
         }
-        public void loadData()
+
+        private void reloadShipxmlToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            checkShipStore();
-            #region Xml Load            
-            test = DeserializeFromXml();
-            int i = 0;
-            foreach (Ship ship in test)
-            {
-                Console.WriteLine(test[i].shipName);
-                Console.WriteLine(test[i].shipLength);
-                i++;
-            }
-            #endregion
-            #region cBox Load
-            int n = 0;
-            foreach (Ship ship in test)
-            {
-                cBoxShipChoose.Items.Add(test[n].shipName);
-                n++;
-                int thing = cBoxShipChoose.SelectedIndex;
-            }
-            #endregion
+            cBoxShipChoose.Items.Clear();
+            loadData();
         }
-        void updateData()
+
+        #endregion
+        #region Methods
+
+        void takeInputs()
         {
-            tBoxShipLength.Text = test[cBoxShipChoose.SelectedIndex].shipLength.ToString();
+            shipLenght = Int32.Parse(tBoxShipLength.Text);
+            freeBoard = Int32.Parse(tBoxFreebroad.Text);
+            containHeight = Int32.Parse(tBoxContainerHeight.Text);
+            windSpeed = Int32.Parse(textBox3.Text);
+            windBearing = Int32.Parse(tBoxWindBearing.Text);
+            numberOfTugs = Int32.Parse(tBoxNumberOfTugs.Text);
         }
-        void checkShipStore()
+
+        void sendOutputs()
         {
-            string FilePath = Application.StartupPath;
-            Console.WriteLine(FilePath);
-            if(System.IO.File.Exists(FilePath + "\\Ship.xml") == false)
-            {
-                Console.WriteLine("No Ship.XML found. Generating New File...");
-                generateXML();
-                Console.WriteLine("XML File Generation Complete.");
-            }
-            else
-            {
-                Console.WriteLine("File exists, Continuing with Startup.");
-            }
+            label1.Text = "Windage Area: " + windageArea.ToString();
+            label2.Text = "Total Bollard Pull: " + bollardPull.ToString();
+            label3.Text = "Bollard Pull per Tug: " + (Math.Round((bollardPull / numberOfTugs), 1)).ToString();
         }
+
+        double windSpeedCalc(int bearing, int windSpeed)
+        {
+            double test = Math.PI / 180;
+            Console.WriteLine(test);
+            double test1 = test * (bearing + 180);
+            Console.WriteLine(test1);
+            double v = windSpeed * Math.Cos(test1);
+            Console.WriteLine(v);
+            return (v / 2);
+        }
+
         void generateXML()
         {
             Ship ship = new Ship();
@@ -202,22 +172,73 @@ namespace WindowsFormsApplication1
 
             SerializeToXML(ships);
         }
-        double windSpeedCalc(int bearing, int windSpeed)
-        {
-            double test = Math.PI / 180;
-            Console.WriteLine(test);
-            double test1 = test * (bearing + 180);
-            Console.WriteLine(test1);
-            double v = windSpeed * Math.Cos(test1);
-            Console.WriteLine(v);
-            return (v/2);
 
+        static public void SerializeToXML(List<Ship> ship)
+        {
+            string FilePath = Application.StartupPath;
+            XmlSerializer Serializer = new XmlSerializer(typeof(List<Ship>));
+            TextWriter textWriter = new StreamWriter(FilePath + "\\Ship.xml");
+            Serializer.Serialize(textWriter, ship);
+            textWriter.Close();
+            Console.WriteLine("Serialization Complete");
         }
 
-        private void reloadShipxmlToolStripMenuItem_Click(object sender, EventArgs e)
+        static List<Ship> DeserializeFromXml()
         {
-            cBoxShipChoose.Items.Clear();
-            loadData();
+            string FilePath = Application.StartupPath;
+            XmlSerializer deserializer = new XmlSerializer(typeof(List<Ship>));
+            TextReader textReader = new StreamReader(FilePath + "\\Ship.xml");
+            List<Ship> ships;
+            ships = (List<Ship>)deserializer.Deserialize(textReader);
+            textReader.Close();
+            return ships;
         }
+        
+        void updateData()
+        {
+            tBoxShipLength.Text = test[cBoxShipChoose.SelectedIndex].shipLength.ToString();
+        }
+
+        void checkShipStore()
+        {
+            string FilePath = Application.StartupPath;
+            Console.WriteLine(FilePath);
+            if (System.IO.File.Exists(FilePath + "\\Ship.xml") == false)
+            {
+                Console.WriteLine("No Ship.XML found. Generating New File...");
+                generateXML();
+                Console.WriteLine("XML File Generation Complete.");
+            }
+            else
+            {
+                Console.WriteLine("File exists, Continuing with Startup.");
+            }
+        }
+
+        public void loadData()
+        {
+            checkShipStore();
+            #region Xml Load
+            test = DeserializeFromXml();
+            int i = 0;
+            foreach (Ship ship in test)
+            {
+                Console.WriteLine(test[i].shipName);
+                Console.WriteLine(test[i].shipLength);
+                i++;
+            }
+            #endregion
+            #region cBox Load
+            int n = 0;
+            foreach (Ship ship in test)
+            {
+                cBoxShipChoose.Items.Add(test[n].shipName);
+                n++;
+                int thing = cBoxShipChoose.SelectedIndex;
+            }
+            #endregion
+        }
+
+        #endregion
     }
 }

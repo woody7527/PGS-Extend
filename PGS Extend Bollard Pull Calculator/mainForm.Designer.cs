@@ -40,6 +40,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.genertateNewShipxmlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reloadShipxmlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label3 = new System.Windows.Forms.Label();
@@ -54,7 +55,6 @@
             this.label8 = new System.Windows.Forms.Label();
             this.tBoxNumberOfTugs = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
-            this.reloadShipxmlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -153,6 +153,13 @@
             this.genertateNewShipxmlToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
             this.genertateNewShipxmlToolStripMenuItem.Text = "Genertate New Ship.xml";
             this.genertateNewShipxmlToolStripMenuItem.Click += new System.EventHandler(this.genertateNewShipxmlToolStripMenuItem_Click);
+            // 
+            // reloadShipxmlToolStripMenuItem
+            // 
+            this.reloadShipxmlToolStripMenuItem.Name = "reloadShipxmlToolStripMenuItem";
+            this.reloadShipxmlToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
+            this.reloadShipxmlToolStripMenuItem.Text = "Reload Ship.xml";
+            this.reloadShipxmlToolStripMenuItem.Click += new System.EventHandler(this.reloadShipxmlToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -277,14 +284,7 @@
             this.label9.TabIndex = 20;
             this.label9.Text = "Number of Tugs";
             // 
-            // reloadShipxmlToolStripMenuItem
-            // 
-            this.reloadShipxmlToolStripMenuItem.Name = "reloadShipxmlToolStripMenuItem";
-            this.reloadShipxmlToolStripMenuItem.Size = new System.Drawing.Size(200, 22);
-            this.reloadShipxmlToolStripMenuItem.Text = "Reload Ship.xml";
-            this.reloadShipxmlToolStripMenuItem.Click += new System.EventHandler(this.reloadShipxmlToolStripMenuItem_Click);
-            // 
-            // Form1
+            // mainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -309,7 +309,10 @@
             this.Controls.Add(this.tBoxShipLength);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "Form1";
+            this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(700, 458);
+            this.MinimumSize = new System.Drawing.Size(700, 458);
+            this.Name = "mainForm";
             this.Text = "Bollard Pull Calculator - Albert Johnson Quay - Portsmouth";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
