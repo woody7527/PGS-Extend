@@ -23,11 +23,11 @@ namespace WindowsFormsApplication1
         #region Variables
 
         int shipLenght;
-        int freeBoard;
-        int containHeight;
+        float freeBoard;
+        float containHeight;
         int windSpeed;
         int windBearing;
-        int windageArea;
+        float windageArea;
         int numberOfTugs;
         double bollardPull;
         double forcePer1000;
@@ -52,26 +52,33 @@ namespace WindowsFormsApplication1
 
         private void button1_Click(object sender, EventArgs e)
         {
-            takeInputs();
-            windageArea = shipLenght * (freeBoard + containHeight);
-            forcePer1000 = (Math.Pow(windSpeedCalc(windBearing - 99, windSpeed), 2)) / 18;
-            bollardPull = (forcePer1000 / 1000) * windageArea;
-            bollardPull = Math.Round(bollardPull, 1);
-
-            if (windBearing >= 009 && windBearing <= 189)
+            if (checkInput() == true)
             {
-                bollardPull = 0;
+                takeInputs();
+                windageArea = shipLenght * (freeBoard + containHeight);
+                forcePer1000 = (Math.Pow(windSpeedCalc(windBearing - 99, windSpeed), 2)) / 18;
+                bollardPull = (forcePer1000 / 1000) * windageArea;
+                bollardPull = Math.Round(bollardPull, 1);
+
+                if (windBearing >= 009 && windBearing <= 189)
+                {
+                    bollardPull = 0;
+                }
+
+                sendOutputs();
+
+                Console.WriteLine("Ship Lenght: " + shipLenght + "Metres");
+                Console.WriteLine("Freeboard Height: " + freeBoard + "Metres");
+                Console.WriteLine("Wind Speed: " + windSpeed + "Knots");
+                Console.WriteLine("Windage Area: " + windageArea + "Metres Squarded");
+                Console.WriteLine("Force Per 1000m^2: " + forcePer1000 + "Newtons");
+                Console.WriteLine("Bollard Pull: " + bollardPull + "Newtons");
+                Console.WriteLine("Number of Tugs: " + numberOfTugs);
             }
-
-            sendOutputs();
-
-            Console.WriteLine("Ship Lenght: " + shipLenght + "Metres");
-            Console.WriteLine("Freeboard Height: " + freeBoard + "Metres");
-            Console.WriteLine("Wind Speed: " + windSpeed + "Knots");
-            Console.WriteLine("Windage Area: " + windageArea + "Metres Squarded");
-            Console.WriteLine("Force Per 1000m^2: " + forcePer1000 + "Newtons");
-            Console.WriteLine("Bollard Pull: " + bollardPull + "Newtons");
-            Console.WriteLine("Number of Tugs: " + numberOfTugs);
+            else
+            {
+                MessageBox.Show("One or More of the Text Box's is either empty or doesn't contain only numbers, please check and try again");
+            }
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -109,8 +116,8 @@ namespace WindowsFormsApplication1
         void takeInputs()
         {
             shipLenght = Int32.Parse(tBoxShipLength.Text);
-            freeBoard = Int32.Parse(tBoxFreebroad.Text);
-            containHeight = Int32.Parse(tBoxContainerHeight.Text);
+            freeBoard = float.Parse(tBoxFreebroad.Text);
+            containHeight = float.Parse(tBoxContainerHeight.Text);
             windSpeed = Int32.Parse(textBox3.Text);
             windBearing = Int32.Parse(tBoxWindBearing.Text);
             numberOfTugs = Int32.Parse(tBoxNumberOfTugs.Text);
@@ -118,9 +125,9 @@ namespace WindowsFormsApplication1
 
         void sendOutputs()
         {
-            label1.Text = "Windage Area: " + windageArea.ToString();
-            label2.Text = "Total Bollard Pull: " + bollardPull.ToString();
-            label3.Text = "Bollard Pull per Tug: " + (Math.Round((bollardPull / numberOfTugs), 1)).ToString();
+            label1.Text = "Windage Area: " + windageArea.ToString() + " m²";
+            label2.Text = "Total Bollard Pull: " + bollardPull.ToString() + " Tons";
+            label3.Text = "Bollard Pull per Tug: " + (bollardPull / numberOfTugs).ToString() + " Tons";
         }
 
         double windSpeedCalc(int bearing, int windSpeed)
@@ -132,6 +139,30 @@ namespace WindowsFormsApplication1
             double v = windSpeed * Math.Cos(test1);
             Console.WriteLine(v);
             return (v / 2);
+        }
+
+        bool checkInput()
+        {
+            List<TextBox> textBoxs = new List<TextBox> {tBoxContainerHeight, tBoxFreebroad, tBoxNumberOfTugs, tBoxShipLength, tBoxWindBearing };
+            foreach (TextBox i in textBoxs)
+            {
+                if (checkForNum(i.Text) == false)
+                {
+                    return false;
+                }
+                else
+                {
+                    Console.WriteLine("String OK");
+                }
+            }
+            return true;
+        }
+
+        bool checkForNum(string i)
+        {
+                double Num;
+                bool isNum = double.TryParse(i.Trim(), out Num);
+                return isNum;
         }
 
         void generateXML()
