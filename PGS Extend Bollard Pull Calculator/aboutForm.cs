@@ -21,7 +21,7 @@ namespace WindowsFormsApplication1
             int label1SizeW = label1.Size.Width;
             int label2SizeW = label2.Size.Width;
             int label3SizeW = label3.Size.Width;
-            int btnSizeW = button1.Size.Width;
+            int btnSizeW = btnClose.Size.Width;
 
             #endregion
             #region Write to Console
@@ -39,7 +39,7 @@ namespace WindowsFormsApplication1
             label1.Location = new Point(50,33);
             label2.Location = new Point((formSizeW / 2) - (label2SizeW / 2), 57);
             label3.Location = new Point((formSizeW / 2) - (label3SizeW / 2), 73);
-            button1.Location = new Point((formSizeW / 2) - (btnSizeW / 2), 92);
+            btnClose.Location = new Point((formSizeW / 2) - (btnSizeW / 2), 92);
             #endregion
         }
 

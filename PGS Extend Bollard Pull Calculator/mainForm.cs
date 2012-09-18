@@ -16,7 +16,6 @@ namespace WindowsFormsApplication1
         public mainForm()
         {
             InitializeComponent();
-            checkShipStore();
             loadData();
         }
 
@@ -31,7 +30,7 @@ namespace WindowsFormsApplication1
         int numberOfTugs;
         double bollardPull;
         double forcePer1000;
-        List<Ship> test = new List<Ship>();
+        List<Ship> shipList = new List<Ship>();
         string FilePath = Application.StartupPath;
 
         #endregion
@@ -227,7 +226,7 @@ namespace WindowsFormsApplication1
         
         void updateData()
         {
-            tBoxShipLength.Text = test[cBoxShipChoose.SelectedIndex].shipLength.ToString();
+            tBoxShipLength.Text = shipList[cBoxShipChoose.SelectedIndex].shipLength.ToString();
         }
 
         void checkShipStore()
@@ -250,20 +249,20 @@ namespace WindowsFormsApplication1
         {
             checkShipStore();
             #region Xml Load
-            test = DeserializeFromXml();
+            shipList = DeserializeFromXml();
             int i = 0;
-            foreach (Ship ship in test)
+            foreach (Ship ship in shipList)
             {
-                Console.WriteLine(test[i].shipName);
-                Console.WriteLine(test[i].shipLength);
+                Console.WriteLine(shipList[i].shipName);
+                Console.WriteLine(shipList[i].shipLength);
                 i++;
             }
             #endregion
             #region cBox Load
             int n = 0;
-            foreach (Ship ship in test)
+            foreach (Ship ship in shipList)
             {
-                cBoxShipChoose.Items.Add(test[n].shipName);
+                cBoxShipChoose.Items.Add(shipList[n].shipName);
                 n++;
                 int thing = cBoxShipChoose.SelectedIndex;
             }
